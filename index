@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048小游戏</title>
+    <!-- 风格和2048游戏呼应，保持视觉统一 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", system-ui, sans-serif;
+        }
+        body {
+            background-color: #FFF8E7; /* 和2048游戏背景一致 */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #8B6914; /* 2048主色调 */
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        /* 游戏入口按钮（和2048按钮风格一致的3D效果） */
+        .play-btn {
+            display: inline-block;
+            padding: 20px 60px;
+            background-color: #CD853F; /* 2048 accent色 */
+            color: white;
+            text-decoration: none;
+            font-size: clamp(1.2rem, 5vw, 2rem);
+            font-weight: bold;
+            border-radius: 12px;
+            box-shadow: 0 6px 0 0 #8B6914; /* 3D阴影 */
+            transition: all 0.2s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .play-btn:active {
+            transform: translateY(6px);
+            box-shadow: none; /* 按下时的3D反馈 */
+        }
+        .tips {
+            margin-top: 30px;
+            color: #666;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2048 小游戏</h1>
+        <!-- 核心修改：跳转链接改为 2048_game.html -->
+        <a href="2048_game.html" class="play-btn">开始游戏</a>
+        <!-- 简单的操作提示，和游戏内提示一致 -->
+        <div class="tips">
+            <p>🖥️ 电脑：方向键控制棋子移动</p>
+            <p>📱 手机：滑动屏幕控制方向</p>
+        </div>
+    </div>
+</body>
+</html>
