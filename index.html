@@ -3,70 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2048小游戏</title>
-    <!-- 风格和2048游戏呼应，保持视觉统一 -->
+    <title>想玩什么？</title>
     <style>
+        /* 全局样式重置与基础设置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Inter", system-ui, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
+
         body {
-            background-color: #FFF8E7; /* 和2048游戏背景一致 */
+            background-color: #f8fafc;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 2rem 1rem;
+            color: #1e293b;
         }
-        .container {
+
+        /* 页面标题（修改为「想玩什么？」，调整样式更贴合氛围） */
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: #0f172a;
             text-align: center;
-            max-width: 500px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 游戏列表容器 */
+        .game-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
             width: 100%;
+            max-width: 800px;
         }
-        h1 {
-            color: #8B6914; /* 2048主色调 */
-            font-size: clamp(2rem, 8vw, 3.5rem);
-            margin-bottom: 30px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+
+        /* 游戏卡片样式（与两款游戏视觉风格适配） */
+        .game-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
-        /* 游戏入口按钮（和2048按钮风格一致的3D效果） */
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* 游戏图标 */
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 游戏名称 */
+        .game-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #0f172a;
+        }
+
+        /* 游戏简介 */
+        .game-desc {
+            color: #64748b;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        /* 跳转按钮（配色适配两款游戏的视觉风格） */
         .play-btn {
-            display: inline-block;
-            padding: 20px 60px;
-            background-color: #CD853F; /* 2048 accent色 */
+            padding: 0.8rem 2rem;
+            background-color: #10b981;
             color: white;
-            text-decoration: none;
-            font-size: clamp(1.2rem, 5vw, 2rem);
-            font-weight: bold;
-            border-radius: 12px;
-            box-shadow: 0 6px 0 0 #8B6914; /* 3D阴影 */
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
             transition: all 0.2s ease;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            text-decoration: none;
         }
-        .play-btn:active {
-            transform: translateY(6px);
-            box-shadow: none; /* 按下时的3D反馈 */
+
+        .play-btn:hover {
+            background-color: #059669;
         }
-        .tips {
-            margin-top: 30px;
-            color: #666;
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            line-height: 1.6;
+
+        /* 响应式适配（手机/平板/电脑都兼容） */
+        @media (max-width: 600px) {
+            .page-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .game-card {
+                padding: 1.5rem;
+            }
+
+            .game-icon {
+                font-size: 3rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>2048 小游戏</h1>
-        <!-- 核心修改：跳转链接改为 2048_game.html -->
-        <a href="2048_game.html" class="play-btn">开始游戏</a>
-        <!-- 简单的操作提示，和游戏内提示一致 -->
-        <div class="tips">
-            <p>🖥️ 电脑：方向键控制棋子移动</p>
-            <p>📱 手机：滑动屏幕控制方向</p>
+    <h1 class="page-title">想玩什么？</h1>
+
+    <div class="game-list">
+        <!-- 扫雷游戏入口（对应 Minesweeper_game.html） -->
+        <div class="game-card">
+            <div class="game-icon">💣</div>
+            <h2 class="game-name">扫雷</h2>
+            <p class="game-desc">经典扫雷游戏，支持简单/中等/困难三种难度，记录你的最短通关时间，横屏体验更佳。</p>
+            <a href="Minesweeper_game.html" class="play-btn">开始游玩</a>
+        </div>
+
+        <!-- 2048游戏入口（对应 2048_game.html） -->
+        <div class="game-card">
+            <div class="game-icon">🧮</div>
+            <h2 class="game-name">2048</h2>
+            <p class="game-desc">经典2048数字合并游戏，支持电脑方向键/手机滑动操作，记录最高分，挑战合成2048！</p>
+            <a href="2048_game.html" class="play-btn">开始游玩</a>
         </div>
     </div>
 </body>
