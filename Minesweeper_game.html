@@ -57,7 +57,7 @@
             line-height: 1.5;
         }
 
-        /* 横屏提示层：细节优化 */
+        /* 横屏提示层：关键修改 - 增加手动关闭按钮样式 */
         .landscape-tip {
             position: fixed;
             top: 0;
@@ -74,8 +74,9 @@
             z-index: 9999;
             text-align: center;
             padding: 24px;
-            display: none;
             backdrop-filter: blur(4px); /* 毛玻璃效果 */
+            /* 初始隐藏，由JS主动判断后决定是否显示 */
+            display: none;
         }
 
         .landscape-tip i {
@@ -100,6 +101,24 @@
             font-size: 16px;
             opacity: 0.7;
             margin-top: 12px;
+        }
+
+        /* 新增：手动关闭按钮样式 */
+        .close-tip-btn {
+            margin-top: 30px;
+            padding: 10px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close-tip-btn:hover {
+            background: var(--primary-hover);
         }
 
         /* 游戏标题：细节润色 */
@@ -305,11 +324,19 @@
         .game-win { color: var(--primary-color); }
         .game-over { color: var(--bg-cell-mine); }
 
-        /* 响应式适配（保留核心逻辑，优化细节） */
-        @media screen and (max-width: 767px) and (orientation: portrait) {
-            .landscape-tip {
+        /* 响应式适配：关键修改 - 简化横屏判断逻辑，兼容更多设备 */
+        @media screen and (max-width: 767px) {
+            /* 仅当屏幕宽度<高度（竖屏）时显示提示 */
+            .landscape-tip.show {
                 display: flex;
             }
+            /* 横屏时强制隐藏提示 */
+            @media (orientation: landscape) {
+                .landscape-tip.show {
+                    display: none;
+                }
+            }
+
             .game-container {
                 padding: 20px 16px;
             }
@@ -326,19 +353,9 @@
             }
         }
 
-        @media screen and (max-width: 767px) and (orientation: landscape) {
-            .landscape-tip {
-                display: none;
-            }
-            .game-container {
-                padding: 16px;
-                max-width: 98vw;
-            }
-        }
-
         @media screen and (min-width: 768px) {
             .landscape-tip {
-                display: none;
+                display: none !important;
             }
             .game-container {
                 max-width: 800px;
@@ -347,11 +364,12 @@
     </style>
 </head>
 <body>
-    <!-- 横屏提示层 -->
-    <div class="landscape-tip">
+    <!-- 横屏提示层：新增手动关闭按钮 -->
+    <div class="landscape-tip" id="landscapeTip">
         <i>📱</i>
         <p>建议横屏游玩体验更佳</p>
         <p>旋转手机后自动适配</p>
+        <button class="close-tip-btn" id="closeTipBtn">仍要继续</button>
     </div>
 
     <h1 class="game-title">扫雷</h1>
@@ -406,10 +424,47 @@
         const gameContainer = document.querySelector('.game-container');
         const timerDisplay = document.getElementById('timer');
         const bestTimeDisplay = document.getElementById('best-time');
+        // 新增：横屏提示层和关闭按钮
+        const landscapeTip = document.getElementById('landscapeTip');
+        const closeTipBtn = document.getElementById('closeTipBtn');
 
-        // 监听屏幕变化
-        window.addEventListener('orientationchange', calculateCellSize);
-        window.addEventListener('resize', calculateCellSize);
+        // ========== 关键修改1：优化屏幕方向检测逻辑 ==========
+        // 检测是否为移动端竖屏
+        function isMobilePortrait() {
+            // 多维度判断：屏幕宽度<高度 + 窗口宽度<768 + 竖屏方向
+            return window.innerWidth < window.innerHeight && 
+                   window.innerWidth < 768 && 
+                   (window.orientation === 0 || window.orientation === 180 || screen.orientation?.type === 'portrait-primary');
+        }
+
+        // 更新横屏提示层显示状态
+        function updateLandscapeTip() {
+            if (isMobilePortrait()) {
+                landscapeTip.classList.add('show');
+            } else {
+                landscapeTip.classList.remove('show');
+            }
+        }
+
+        // ========== 关键修改2：绑定屏幕事件（增加防抖，兼容更多设备） ==========
+        // 防抖函数：避免频繁触发
+        function debounce(func, delay = 200) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        // 监听屏幕变化（增加resize兜底，防抖处理）
+        window.addEventListener('orientationchange', debounce(updateLandscapeTip));
+        window.addEventListener('resize', debounce(updateLandscapeTip));
+        // 手动关闭按钮事件
+        closeTipBtn.addEventListener('click', () => {
+            landscapeTip.classList.remove('show');
+        });
+
+        // ========== 原有逻辑 ==========
         difficulty.addEventListener('change', () => {
             calculateCellSize();
             updateBestTimeDisplay();
@@ -869,9 +924,11 @@
             }, 2000);
         }
 
-        // 初始化：绑定新游戏按钮事件
+        // ========== 关键修改3：页面加载时主动检测屏幕方向 ==========
         // 首次计算格子尺寸并初始化
         calculateCellSize();
+        // 页面加载完成后主动检测屏幕方向，更新提示层
+        window.addEventListener('load', updateLandscapeTip);
     </script>
 </body>
 </html>
